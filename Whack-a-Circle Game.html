@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack-a-Circle Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            width: 400px;
+            height: 400px;
+            background-color: #fff;
+            border: 2px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+        .circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ff0000;
+            position: absolute;
+            cursor: pointer;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+        }
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="score">Score: 0</div>
+        <div id="timer">Time: 30</div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+
+        function createCircle() {
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.style.left = Math.random() * (gameContainer.clientWidth - 50) + 'px';
+            circle.style.top = Math.random() * (gameContainer.clientHeight - 50) + 'px';
+            circle.onclick = () => {
+                score++;
+                scoreElement.textContent = `Score: ${score}`;
+                gameContainer.removeChild(circle);
+            };
+            gameContainer.appendChild(circle);
+            setTimeout(() => {
+                if (gameContainer.contains(circle)) {
+                    gameContainer.removeChild(circle);
+                }
+            }, 1500);
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            timerElement.textContent = `Time: ${timeLeft}`;
+            if (timeLeft === 0) {
+                clearInterval(gameInterval);
+                alert(`Game Over! Your score is ${score}`);
+            }
+        }
+
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            scoreElement.textContent = 'Score: 0';
+            timerElement.textContent = 'Time: 30';
+            gameInterval = setInterval(() => {
+                createCircle();
+                updateTimer();
+            }, 1000);
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
